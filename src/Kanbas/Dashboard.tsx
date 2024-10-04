@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { GoChecklist } from "react-icons/go";
 
 export default function Dashboard() {
   return (
@@ -14,9 +15,10 @@ export default function Dashboard() {
                   to="/Kanbas/Courses/1234/Home">
                 <img src="/images/reactjs.jpg" width="100%" height={160}/>
                 <div className="card-body">
-                  <h5 className="wd-dashboard-course-title card-title">CS1973 Web Development</h5>
-                  <p className="wd-dashboard-course-title card-text">Full Stack software developer</p>
-                  <button className="btn btn-primary"> Go </button>
+                  <p className="wd-dashboard-course-title card-title h5 text-primary">CS1973 Web Development</p>
+                  <p className="wd-dashboard-course-title card-text h5 text-secondary">CS1973.202410</p>
+                  <p className="wd-dashboard-course-title card-text h6 text-secondary">202410_1 Fall 2024 Semester Full Term</p>
+                  <GoChecklist className="fs-3"/>
                 </div>
               </Link>
             </div>
@@ -28,9 +30,10 @@ export default function Dashboard() {
                   to="/Kanbas/Courses/1234/Home">
                 <img src="/images/reactjs.jpg" width="100%" height={160}/>
                 <div className="card-body">
-                  <h5 className="wd-dashboard-course-title card-title">CS1234 React JS</h5>
-                  <p className="wd-dashboard-course-title card-text">Learn React.js</p>
-                  <button className="btn btn-primary"> Go </button>
+                  <p className="wd-dashboard-course-title card-title h5 text-primary">CS1234 React JS</p>
+                  <p className="wd-dashboard-course-title card-text h5 text-secondary">CS7777.202410</p>
+                  <p className="wd-dashboard-course-title card-text h6 text-secondary">202410_1 Fall 2024 Semester Full Term</p>
+                  <GoChecklist className="fs-3"/>
                 </div>
               </Link>
             </div>
@@ -42,9 +45,10 @@ export default function Dashboard() {
                   to="/Kanbas/Courses/1234/Home">
                 <img src="/images/reactjs.jpg" width="100%" height={160}/>
                 <div className="card-body">
-                  <h5 className="wd-dashboard-course-title card-title">CS3229 Spring Boot</h5>
-                  <p className="wd-dashboard-course-title card-text">Learn Spring Boot</p>
-                  <button className="btn btn-primary"> Go </button>
+                  <p className="wd-dashboard-course-title card-title h5 text-primary">CS3229 Spring Boot</p>
+                  <p className="wd-dashboard-course-title card-text h5 text-secondary">CS7777.202410</p>
+                  <p className="wd-dashboard-course-title card-text h6 text-secondary">202410_1 Fall 2024 Semester Full Term</p>
+                  <GoChecklist className="fs-3"/>
                 </div>
               </Link>
             </div>
@@ -56,9 +60,10 @@ export default function Dashboard() {
                   to="/Kanbas/Courses/1234/Home">
                 <img src="/images/reactjs.jpg" width="100%" height={160}/>
                 <div className="card-body">
-                  <h5 className="wd-dashboard-course-title card-title">CS6123 Unix</h5>
-                  <p className="wd-dashboard-course-title card-text">Learn Operating System</p>
-                  <button className="btn btn-primary"> Go </button>
+                  <p className="wd-dashboard-course-title card-title h5 text-primary">CS6123 Unix</p>
+                  <p className="wd-dashboard-course-title card-text h5 text-secondary">CS7777.202410</p>
+                  <p className="wd-dashboard-course-title card-text h6 text-secondary">202410_1 Fall 2024 Semester Full Term</p>
+                  <GoChecklist className="fs-3"/>
                 </div>
               </Link>
             </div>
@@ -70,9 +75,10 @@ export default function Dashboard() {
                   to="/Kanbas/Courses/1234/Home">
                 <img src="/images/reactjs.jpg" width="100%" height={160}/>
                 <div className="card-body">
-                  <h5 className="wd-dashboard-course-title card-title">CS1235 React JS</h5>
-                  <p className="wd-dashboard-course-title card-text">Full Stack software developer</p>
-                  <button className="btn btn-primary"> Go </button>
+                  <p className="wd-dashboard-course-title card-title h5 text-primary">CS1235 React JS</p>
+                  <p className="wd-dashboard-course-title card-text h5 text-secondary">CS7777.202410</p>
+                  <p className="wd-dashboard-course-title card-text h6 text-secondary">202410_1 Fall 2024 Semester Full Term</p>
+                  <GoChecklist className="fs-3"/>
                 </div>
               </Link>
             </div>
@@ -84,9 +90,10 @@ export default function Dashboard() {
                   to="/Kanbas/Courses/1234/Home">
                 <img src="/images/reactjs.jpg" width="100%" height={160}/>
                 <div className="card-body">
-                  <h5 className="wd-dashboard-course-title card-title">CS1236 React JS</h5>
-                  <p className="wd-dashboard-course-title card-text">Full Stack software developer</p>
-                  <button className="btn btn-primary"> Go </button>
+                  <p className="wd-dashboard-course-title card-title h5 text-primary">CS1236 React JS</p>
+                  <p className="wd-dashboard-course-title card-text h5 text-secondary">CS7777.202410</p>
+                  <p className="wd-dashboard-course-title card-text h6 text-secondary">202410_1 Fall 2024 Semester Full Term</p>
+                  <GoChecklist className="fs-3"/>
                 </div>
               </Link>
             </div>
@@ -98,9 +105,10 @@ export default function Dashboard() {
                   to="/Kanbas/Courses/1234/Home">
                 <img src="/images/reactjs.jpg" width="100%" height={160}/>
                 <div className="card-body">
-                  <h5 className="wd-dashboard-course-title card-title">CS7777 Generative AI</h5>
-                  <p className="wd-dashboard-course-title card-text">Learn large language models</p>
-                  <button className="btn btn-primary"> Go </button>
+                  <p className="wd-dashboard-course-title card-title h5 text-primary">CS7777 Generative AI</p>
+                  <p className="wd-dashboard-course-title card-text h5 text-secondary">CS7777.202410</p>
+                  <p className="wd-dashboard-course-title card-text h6 text-secondary">202410_1 Fall 2024 Semester Full Term</p>
+                  <GoChecklist className="fs-3"/>
                 </div>
               </Link>
             </div>
