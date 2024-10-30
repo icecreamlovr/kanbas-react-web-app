@@ -6,16 +6,19 @@ import { BsGripVertical } from "react-icons/bs";
 import { GoChecklist } from "react-icons/go";
 import { Link, useParams } from "react-router-dom";
 import { assignments } from "../../Database";
+import FacultyProtectedRoute from "../../Account/FacultyProtectedRoute";
 
 export default function Assignments() {
   const { cid } = useParams();
   return (
     <div>
-      <AssignmentControl />
-      <br />
-      <br />
-      <br />
-      <br />
+      <FacultyProtectedRoute>
+        <AssignmentControl />
+        <br />
+        <br />
+        <br />
+        <br />
+      </FacultyProtectedRoute>
       <ul id="wd-modules" className="list-group rounded-0">
         <li className="wd-module list-group-item p-0 mb-5 fs-5 border-gray">
           <div className="wd-title p-3 ps-2 bg-secondary">

@@ -1,3 +1,4 @@
+import FacultyProtectedRoute from "../../Account/FacultyProtectedRoute";
 import Modules from "../Modules";
 import CourseStatus from "./Status";
 
@@ -8,7 +9,9 @@ export default function Home() {
         <Modules />
       </div>
       <div className="d-none d-md-block ms-3 me-2">
-        <CourseStatus />
+        <FacultyProtectedRoute>
+          <CourseStatus />
+        </FacultyProtectedRoute>
       </div>
     </div>
   );

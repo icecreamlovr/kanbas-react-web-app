@@ -6,9 +6,9 @@ import Home from "./Home";
 import Assignments from "./Assignments";
 import AssignmentEditor from "./Assignments/Editor";
 import PeopleTable from "./People/Table";
-import { courses } from "../Database";
+import FacultyProtectedRoute from "../Account/FacultyProtectedRoute";
 
-export default function Courses() {
+export default function Courses({ courses }: { courses: any[] }) {
   const { pathname } = useLocation();
   const { cid } = useParams();
   const course = courses.find((course) => course._id === cid);
@@ -30,7 +30,14 @@ export default function Courses() {
             <Route path="Home" element={<Home />} />
             <Route path="Modules" element={<Modules />} />
             <Route path="Assignments" element={<Assignments />} />
-            <Route path="Assignments/:aid" element={<AssignmentEditor />} />
+            <Route
+              path="Assignments/:aid"
+              element={
+                <FacultyProtectedRoute>
+                  <AssignmentEditor />
+                </FacultyProtectedRoute>
+              }
+            />
             <Route path="People" element={<PeopleTable />} />
           </Routes>
         </div>
