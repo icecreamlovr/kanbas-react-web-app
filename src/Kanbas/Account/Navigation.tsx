@@ -1,6 +1,17 @@
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
+const linkClassNames: { [key: string]: string } = {
+  Profile: "list-group-item text-danger border border-0",
+  Signin: "list-group-item active border border-0",
+  Signup: "list-group-item text-danger border border-0",
+};
+const linkIds: { [key: string]: string } = {
+  Profile: "wd-account-profile-link",
+  Signin: "wd-account-signin-link",
+  Signup: "wd-account-signup-link",
+};
+
 export default function AccountNavigation() {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const links = currentUser ? ["Profile"] : ["Signin", "Signup"];
@@ -8,38 +19,10 @@ export default function AccountNavigation() {
   return (
     <div id="wd-account-navigation" className="wd list-group fs-5 rounded-0">
       {links.map((link) => (
-        <Link
-          id="wd-account-signin-link"
-          to={`/Kanbas/Account/Signin`}
-          className="list-group-item active border border-0"
-        >
-          Signin
+        <Link id={linkIds[link]} to={`/Kanbas/Account/${link}`} className={linkClassNames[link]}>
+          {link}
         </Link>
       ))}
-      <Link
-        id="wd-account-signin-link"
-        to={`/Kanbas/Account/Signin`}
-        className="list-group-item active border border-0"
-      >
-        Signin
-      </Link>
-      <br />
-      <Link
-        id="wd-account-signup-link"
-        to={`/Kanbas/Account/Signup`}
-        className="list-group-item text-danger border border-0"
-      >
-        Signup
-      </Link>
-      <br />
-      <Link
-        id="wd-account-profile-link"
-        to={`/Kanbas/Account/Profile`}
-        className="list-group-item text-danger border border-0"
-      >
-        Profile
-      </Link>
-      <br />
     </div>
   );
 }

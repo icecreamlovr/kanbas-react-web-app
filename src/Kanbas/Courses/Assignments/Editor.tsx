@@ -1,10 +1,65 @@
 import { Link, useParams } from "react-router-dom";
-import { assignments } from "../../Database";
+import { useSelector, useDispatch } from "react-redux";
+import { useState } from "react";
+import { addAssignment, updateAssignment, deleteAssignment } from "./reducer";
+
+const defaultTitle = `New Assignment`;
+const defaultDescription = `New Assignment Description`;
+const defaultPoints = 100;
+const defaultDueDate = `2024-05-13`;
+const defaultAvailableFromDate = `2024-05-06`;
+const defaultAvailableUntilDate = `2024-05-15`;
 
 export default function AssignmentEditor() {
-  const { aid, cid } = useParams();
-  const assignment = assignments.find((assignment) => assignment._id === aid);
-  const description = `The assignment is available online. \n\nSubmit a link to the landing page of your Web application running on Netlify.`;
+  const { cid, aid } = useParams();
+  const dispatch = useDispatch();
+  const isNew = aid === "New";
+
+  const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+  const assignment = assignments.find((assignment: any) => assignment._id === aid);
+
+  const [assignmentTitle, setAssignmentTitle] = useState(isNew ? defaultTitle : assignment.title);
+  const [description, setDescription] = useState(
+    isNew ? defaultDescription : assignment.description || defaultDescription
+  );
+  const [points, setPoints] = useState(isNew ? defaultPoints : assignment.points || defaultPoints);
+  const [dueDate, setDueDate] = useState(isNew ? defaultDueDate : assignment.dueDate || defaultDueDate);
+  const [availableFromDate, setAvailableFromDate] = useState(
+    isNew ? defaultAvailableFromDate : assignment.availableFromDate || defaultAvailableFromDate
+  );
+  const [availableUntilDate, setAvailableUntilDate] = useState(
+    isNew ? defaultAvailableUntilDate : assignment.availableUntilDate || defaultAvailableUntilDate
+  );
+
+  const saveAssignment = () => {
+    if (isNew) {
+      dispatch(
+        addAssignment({
+          title: assignmentTitle,
+          course: cid,
+          description: description,
+          points: points,
+          dueDate: dueDate,
+          availableFromDate: availableFromDate,
+          availableUntilDate: availableUntilDate,
+        })
+      );
+    } else {
+      dispatch(
+        updateAssignment({
+          _id: aid,
+          title: assignmentTitle,
+          course: cid,
+          description: description,
+          points: points,
+          dueDate: dueDate,
+          availableFromDate: availableFromDate,
+          availableUntilDate: availableUntilDate,
+        })
+      );
+    }
+  };
+
   return (
     <div id="wd-assignments-editor" className="col-9 ms-5">
       <label htmlFor="wd-name" className="form-label">
@@ -14,20 +69,31 @@ export default function AssignmentEditor() {
         type="text"
         className="form-control my-2"
         id="wd-name"
-        placeholder={assignment?.title}
-        value={assignment?.title}
+        placeholder={assignmentTitle}
+        defaultValue={assignmentTitle}
+        onChange={(e) => setAssignmentTitle(e.target.value)}
       />
       <div className="my-3">
-        <textarea id="wd-description" className="form-control" rows={10}>
-          {description}
-        </textarea>
+        <textarea
+          id="wd-description"
+          className="form-control"
+          rows={10}
+          defaultValue={description}
+          onChange={(e) => setDescription(e.target.value)}
+        ></textarea>
       </div>
 
       <div className="row my-3">
         {/* row is flex. need to clearfix, so that float-end can work as expected */}
         <div className="clearfix">
           <div className="col-8 float-end ms-1">
-            <input type="text" className="form-control float-end" id="wd-points" value={100} />
+            <input
+              type="text"
+              className="form-control float-end"
+              id="wd-points"
+              defaultValue={points}
+              onChange={(e) => setPoints(e.target.value)}
+            />
           </div>
           <div className="col-3 float-end me-1">
             <label className="col-3 float-end" htmlFor="wd-points">
@@ -126,7 +192,13 @@ export default function AssignmentEditor() {
             <label className="form-label my-2" htmlFor="dueDate">
               Due
             </label>
-            <input type="date" className="form-control my-2" value="2024-05-13" id="dueDate" />
+            <input
+              type="date"
+              className="form-control my-2"
+              defaultValue={dueDate}
+              id="dueDate"
+              onChange={(e) => setDueDate(e.target.value)}
+            />
             <div className="row ">
               <label className="form-label col-6 my-2" htmlFor="availableFrom">
                 Available from
@@ -137,10 +209,22 @@ export default function AssignmentEditor() {
             </div>
             <div className="row ">
               <div className="col-6">
-                <input type="date" className="form-control" value="2024-05-06" id="availableFrom" />
+                <input
+                  type="date"
+                  className="form-control"
+                  defaultValue={availableFromDate}
+                  id="availableFrom"
+                  onChange={(e) => setAvailableFromDate(e.target.value)}
+                />
               </div>
               <div className="col-6">
-                <input type="date" className="form-control" id="until" />
+                <input
+                  type="date"
+                  className="form-control"
+                  defaultValue={availableUntilDate}
+                  id="until"
+                  onChange={(e) => setAvailableUntilDate(e.target.value)}
+                />
               </div>
             </div>
           </div>
@@ -156,7 +240,7 @@ export default function AssignmentEditor() {
 
       <div className="row my-3">
         <div className="clearfix">
-          <button className="btn btn-danger float-end m-1">
+          <button onClick={saveAssignment} className="btn btn-danger float-end m-1">
             <Link
               id="wd-assignments-link"
               to={`/Kanbas/Courses/${cid}/Assignments`}
