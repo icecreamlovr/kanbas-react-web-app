@@ -52,7 +52,7 @@ export default function Kanbas() {
               element={
                 <ProtectedRoute>
                   <Dashboard
-                    courses={courses}
+                    allCourses={courses}
                     course={course}
                     setCourse={setCourse}
                     addNewCourse={addNewCourse}
