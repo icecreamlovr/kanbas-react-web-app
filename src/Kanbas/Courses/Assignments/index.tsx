@@ -6,13 +6,30 @@ import { BsGripVertical } from "react-icons/bs";
 import { GoChecklist } from "react-icons/go";
 import { Link, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { addAssignment, updateAssignment, deleteAssignment } from "./reducer";
+import { useEffect } from "react";
+import { setAssignments, addAssignment, updateAssignment, deleteAssignment } from "./reducer";
 import FacultyProtectedRoute from "../../Account/FacultyProtectedRoute";
+import * as coursesClient from "../client";
+import * as assignmentsClient from "./client";
 
 export default function Assignments() {
   const { cid } = useParams();
   const { assignments } = useSelector((state: any) => state.assignmentsReducer);
   const dispatch = useDispatch();
+
+  const fetchAssignments = async () => {
+    const assignments = await coursesClient.findAssignmentsForCourse(cid as string);
+    dispatch(setAssignments(assignments));
+  };
+  const removeAssignment = async (assignmentId: string) => {
+    await assignmentsClient.deleteAssignment(assignmentId);
+    dispatch(deleteAssignment(assignmentId));
+  };
+
+  useEffect(() => {
+    fetchAssignments();
+  }, []);
+
   return (
     <div>
       <FacultyProtectedRoute>
@@ -32,7 +49,7 @@ export default function Assignments() {
           </div>
           <ul className="wd-lessons list-group rounded-0">
             {assignments
-              .filter((assignment: any) => assignment.course === cid)
+              // .filter((assignment: any) => assignment.course === cid)
               .map((assignment: any) => (
                 <li className="wd-lesson list-group-item p-3 ps-1">
                   <div className="row">
@@ -68,7 +85,7 @@ export default function Assignments() {
                     <div className="col-1 float-end" style={{ width: 100 }}>
                       <ItemControlButtons
                         assignmentId={assignment._id}
-                        deleteAssignment={(aid) => dispatch(deleteAssignment(aid))}
+                        deleteAssignment={(aid) => removeAssignment(aid)}
                       />
                     </div>
                   </div>

@@ -7,18 +7,24 @@ import { enroll, unenroll } from "./Enrollments/reducer";
 
 export default function Dashboard({
   allCourses,
+  enrolledCourses,
   course,
   setCourse,
   addNewCourse,
   deleteCourse,
   updateCourse,
+  handleEnroll,
+  handleUnenroll,
 }: {
   allCourses: any[];
+  enrolledCourses: any[];
   course: any;
   setCourse: (course: any) => void;
   addNewCourse: () => void;
   deleteCourse: (course: any) => void;
   updateCourse: () => void;
+  handleEnroll: (courseId: string) => void;
+  handleUnenroll: (courseId: string) => void;
 }) {
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state: any) => state.accountReducer);
@@ -33,31 +39,34 @@ export default function Dashboard({
       setDisplayEnrolledOnly(true);
     }
   };
-  const handleEnroll = (courseId: string) => {
-    dispatch(
-      enroll({
-        user: currentUser._id,
-        course: courseId,
-      })
-    );
-  };
-  const handleUnenroll = (courseId: string) => {
-    dispatch(
-      unenroll({
-        user: currentUser._id,
-        course: courseId,
-      })
-    );
-  };
+  // const handleEnroll = (courseId: string) => {
+  //   dispatch(
+  //     enroll({
+  //       user: currentUser._id,
+  //       course: courseId,
+  //     })
+  //   );
+  // };
+  // const handleUnenroll = (courseId: string) => {
+  //   dispatch(
+  //     unenroll({
+  //       user: currentUser._id,
+  //       course: courseId,
+  //     })
+  //   );
+  // };
 
   const isStudent = currentUser.role === "STUDENT";
+  // const inEnrolled = (course: any) => {
+  //   return enrollments.some(
+  //     (enrollment: any) => enrollment.user === currentUser._id && enrollment.course === course._id
+  //   );
+  // };
   const inEnrolled = (course: any) => {
-    return enrollments.some(
-      (enrollment: any) => enrollment.user === currentUser._id && enrollment.course === course._id
-    );
+    return enrolledCourses.some((enrolled: any) => enrolled._id === course._id);
   };
 
-  const enrolledCourses = allCourses.filter(inEnrolled);
+  // const enrolledCourses = allCourses.filter(inEnrolled);
   const displayedCourses = isStudent && !displayEnrolledOnly ? allCourses : enrolledCourses;
 
   return (

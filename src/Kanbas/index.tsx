@@ -16,6 +16,7 @@ import ProtectedRoute from "./Account/ProtectedRoute";
 
 export default function Kanbas() {
   const [courses, setCourses] = useState<any[]>([]);
+  const [allCourses, setAllCourses] = useState<any[]>([]);
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const [course, setCourse] = useState<any>({
     _id: "0",
@@ -28,36 +29,42 @@ export default function Kanbas() {
   });
   const addNewCourse = async () => {
     const newCourse = await userClient.createCourse(course);
-    setCourses([...courses, newCourse]);
+    await fetchCourses();
     // console.log(">>>1");
     // console.log(courses);
   };
   const deleteCourse = async (courseId: string) => {
     const status = await courseClient.deleteCourse(courseId);
-    setCourses(courses.filter((course: any) => course._id !== courseId));
+    await fetchCourses();
   };
   const updateCourse = async () => {
     await courseClient.updateCourse(course);
-    setCourses(
-      courses.map((c) => {
-        if (c._id === course._id) {
-          return course;
-        } else {
-          return c;
-        }
-      })
-    );
+    await fetchCourses();
   };
+  const handleEnroll = async (courseId: string) => {
+    const status = await userClient.enroll(courseId);
+    await fetchCourses();
+  };
+  const handleUnenroll = async (courseId: string) => {
+    const status = await userClient.unenroll(courseId);
+    await fetchCourses();
+  };
+
   const fetchCourses = async () => {
-    let courses = [];
+    let enrolled = [];
+    let allCourses = [];
     try {
-      courses = await userClient.findMyCourses();
+      enrolled = await userClient.findMyCourses();
     } catch (error) {
       console.error(error);
     }
-    setCourses(courses);
-    // console.log(">>>2");
-    // console.log(courses);
+    try {
+      allCourses = await courseClient.fetchAllCourses();
+    } catch (error) {
+      console.error(error);
+    }
+    setCourses(enrolled);
+    setAllCourses(allCourses);
   };
   useEffect(() => {
     fetchCourses();
@@ -76,12 +83,15 @@ export default function Kanbas() {
               element={
                 <ProtectedRoute>
                   <Dashboard
-                    allCourses={courses}
+                    allCourses={allCourses}
+                    enrolledCourses={courses}
                     course={course}
                     setCourse={setCourse}
                     addNewCourse={addNewCourse}
                     deleteCourse={deleteCourse}
                     updateCourse={updateCourse}
+                    handleEnroll={handleEnroll}
+                    handleUnenroll={handleUnenroll}
                   />
                 </ProtectedRoute>
               }

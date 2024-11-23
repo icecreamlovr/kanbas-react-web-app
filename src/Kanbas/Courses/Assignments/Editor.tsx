@@ -1,7 +1,9 @@
 import { Link, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
-import { addAssignment, updateAssignment, deleteAssignment } from "./reducer";
+import { addAssignment, updateAssignment } from "./reducer";
+import * as coursesClient from "../client";
+import * as assignmentsClient from "./client";
 
 const defaultTitle = `New Assignment`;
 const defaultDescription = `New Assignment Description`;
@@ -31,32 +33,42 @@ export default function AssignmentEditor() {
     isNew ? defaultAvailableUntilDate : assignment.availableUntilDate || defaultAvailableUntilDate
   );
 
-  const saveAssignment = () => {
+  const createAssignmentForCourse = async () => {
+    if (!cid) return;
+    const newAssignment = {
+      title: assignmentTitle,
+      course: cid,
+      description: description,
+      points: points,
+      dueDate: dueDate,
+      availableFromDate: availableFromDate,
+      availableUntilDate: availableUntilDate,
+    };
+    const assignment = await coursesClient.createAssignmentForCourse(cid, newAssignment);
+    dispatch(addAssignment(assignment));
+  };
+
+  const updateExistingAssignment = async () => {
+    if (!cid) return;
+    const newAssignment = {
+      _id: aid,
+      title: assignmentTitle,
+      course: cid,
+      description: description,
+      points: points,
+      dueDate: dueDate,
+      availableFromDate: availableFromDate,
+      availableUntilDate: availableUntilDate,
+    };
+    await assignmentsClient.updateAssignment(newAssignment);
+    dispatch(updateAssignment(newAssignment));
+  };
+
+  const saveAssignment = async () => {
     if (isNew) {
-      dispatch(
-        addAssignment({
-          title: assignmentTitle,
-          course: cid,
-          description: description,
-          points: points,
-          dueDate: dueDate,
-          availableFromDate: availableFromDate,
-          availableUntilDate: availableUntilDate,
-        })
-      );
+      await createAssignmentForCourse();
     } else {
-      dispatch(
-        updateAssignment({
-          _id: aid,
-          title: assignmentTitle,
-          course: cid,
-          description: description,
-          points: points,
-          dueDate: dueDate,
-          availableFromDate: availableFromDate,
-          availableUntilDate: availableUntilDate,
-        })
-      );
+      await updateExistingAssignment();
     }
   };
 
