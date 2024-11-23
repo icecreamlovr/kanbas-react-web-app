@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import FacultyProtectedRoute from "./Account/FacultyProtectedRoute";
 import StudentProtectedRoute from "./Account/StudentProtectedRoute";
-import { enroll, unenroll } from "./Enrollments/reducer";
+// import { enroll, unenroll } from "./Enrollments/reducer";
 
 export default function Dashboard({
   allCourses,

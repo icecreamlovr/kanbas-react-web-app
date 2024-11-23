@@ -12,17 +12,19 @@ const assignmentsSlice = createSlice({
     },
 
     addAssignment: (state, { payload: assignment }) => {
-      const newAssignment: any = {
-        _id: new Date().getTime().toString(),
-        lessons: [],
-        title: assignment.title,
-        course: assignment.course, // immutable
-        description: assignment.description,
-        points: assignment.points,
-        dueDate: assignment.dueDate,
-        availableFromDate: assignment.availableFromDate,
-        availableUntilDate: assignment.availableUntilDate,
-      };
+      // don't assign new ID. this will cause inconsistency between reducer and server.
+      // const newAssignment: any = {
+      //   _id: new Date().getTime().toString(),
+      //   lessons: [],
+      //   title: assignment.title,
+      //   course: assignment.course, // immutable
+      //   description: assignment.description,
+      //   points: assignment.points,
+      //   dueDate: assignment.dueDate,
+      //   availableFromDate: assignment.availableFromDate,
+      //   availableUntilDate: assignment.availableUntilDate,
+      // };
+      const newAssignment = assignment;
       state.assignments = [...state.assignments, newAssignment] as any;
     },
     deleteAssignment: (state, { payload: assignmentId }) => {
