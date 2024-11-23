@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from "react-router";
 import Account from "./Account";
+import Session from "./Account/Session";
 import Dashboard from "./Dashboard";
 import KanbasNavigation from "./Navigation";
 import Courses from "./Courses";
@@ -40,7 +41,7 @@ export default function Kanbas() {
     );
   };
   return (
-    <Provider store={store}>
+    <Session>
       <div id="wd-kanbas">
         <KanbasNavigation />
         <div className="wd-main-content-offset p-3">
@@ -75,6 +76,6 @@ export default function Kanbas() {
           </Routes>
         </div>
       </div>
-    </Provider>
+    </Session>
   );
 }
