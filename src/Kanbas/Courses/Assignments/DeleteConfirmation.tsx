@@ -1,10 +1,12 @@
 export default function DeleteConfirmation({
   modalId,
   assignmentId,
+  assignmentTitle,
   deleteAssignment,
 }: {
   modalId: string;
   assignmentId: string;
+  assignmentTitle: string;
   deleteAssignment: (assignmentId: string) => void;
 }) {
   return (
@@ -19,7 +21,7 @@ export default function DeleteConfirmation({
           </div>
           <div className="modal-body">
             <label htmlFor="wd-name" className="form-label">
-              Are you sure you want to delete the assignment {assignmentId}?
+              Are you sure you want to delete the assignment {assignmentTitle}?
             </label>
           </div>
           <div className="modal-footer">

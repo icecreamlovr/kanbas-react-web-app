@@ -6,69 +6,28 @@ import StudentProtectedRoute from "./Account/StudentProtectedRoute";
 // import { enroll, unenroll } from "./Enrollments/reducer";
 
 export default function Dashboard({
-  allCourses,
-  enrolledCourses,
+  courses,
   course,
   setCourse,
   addNewCourse,
   deleteCourse,
   updateCourse,
-  handleEnroll,
-  handleUnenroll,
+  updateEnrollment,
+  enrolling,
+  setEnrolling,
 }: {
-  allCourses: any[];
-  enrolledCourses: any[];
+  courses: any[];
   course: any;
   setCourse: (course: any) => void;
   addNewCourse: () => void;
   deleteCourse: (course: any) => void;
   updateCourse: () => void;
-  handleEnroll: (courseId: string) => void;
-  handleUnenroll: (courseId: string) => void;
+  updateEnrollment: (courseId: string, enrolled: boolean) => void;
+  enrolling: boolean;
+  setEnrolling: (enrolling: boolean) => void;
 }) {
-  const dispatch = useDispatch();
+  // console.log(courses.length);
   const { currentUser } = useSelector((state: any) => state.accountReducer);
-  const { enrollments } = useSelector((state: any) => state.enrollmentsReducer);
-
-  // Toggle between displaying all courses (when false) vs only enrolled courses (when true)
-  const [displayEnrolledOnly, setDisplayEnrolledOnly] = useState(true);
-  const handleClickEnrollments = () => {
-    if (displayEnrolledOnly) {
-      setDisplayEnrolledOnly(false);
-    } else {
-      setDisplayEnrolledOnly(true);
-    }
-  };
-  // const handleEnroll = (courseId: string) => {
-  //   dispatch(
-  //     enroll({
-  //       user: currentUser._id,
-  //       course: courseId,
-  //     })
-  //   );
-  // };
-  // const handleUnenroll = (courseId: string) => {
-  //   dispatch(
-  //     unenroll({
-  //       user: currentUser._id,
-  //       course: courseId,
-  //     })
-  //   );
-  // };
-
-  const isStudent = currentUser.role === "STUDENT";
-  // const inEnrolled = (course: any) => {
-  //   return enrollments.some(
-  //     (enrollment: any) => enrollment.user === currentUser._id && enrollment.course === course._id
-  //   );
-  // };
-  const inEnrolled = (course: any) => {
-    return enrolledCourses.some((enrolled: any) => enrolled._id === course._id);
-  };
-
-  // const enrolledCourses = allCourses.filter(inEnrolled);
-  const displayedCourses = isStudent && !displayEnrolledOnly ? allCourses : enrolledCourses;
-
   return (
     <div id="wd-dashboard">
       <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
@@ -99,23 +58,18 @@ export default function Dashboard({
       </FacultyProtectedRoute>
       <StudentProtectedRoute>
         <div>
-          <button className="btn btn-primary float-end" id="wd-enrollments-click" onClick={handleClickEnrollments}>
-            Enrollments
+          <button onClick={() => setEnrolling(!enrolling)} className="float-end btn btn-primary">
+            {enrolling ? "My Courses" : "All Courses"}
           </button>
         </div>
       </StudentProtectedRoute>
-      <h2 id="wd-dashboard-published">Published Courses ({allCourses.length})</h2> <hr />
-      {isStudent && (
-        <div>
-          <h2 id="wd-dashboard-enrolled-or-all">
-            {displayEnrolledOnly ? "Enrolled Courses" : "All Courses"} ({displayedCourses.length})
-          </h2>{" "}
-          <hr />
-        </div>
-      )}
+      <h2 id="wd-dashboard-enrolled-or-all">
+        {currentUser.role === "ADMIN" || enrolling ? "All Courses" : "My Courses"} ({courses.length})
+      </h2>{" "}
+      <hr />
       <div id="wd-dashboard-courses" className="row">
         <div className="row row-cols-1 row-cols-md-5 g-4">
-          {displayedCourses.map((course: any) => (
+          {courses.map((course: any) => (
             <div className="wd-dashboard-course col" style={{ width: "300px" }}>
               <div className="card rounded-3 overflow-hidden">
                 <Link
@@ -152,7 +106,19 @@ export default function Dashboard({
                       </button>
                     </FacultyProtectedRoute>
                     <StudentProtectedRoute>
-                      {inEnrolled(course) ? (
+                      {enrolling && (
+                        <button
+                          onClick={(event) => {
+                            event.preventDefault();
+                            updateEnrollment(course._id, !course.enrolled);
+                          }}
+                          className={`btn ${course.enrolled ? "btn-danger" : "btn-success"} float-end`}
+                        >
+                          {course.enrolled ? "Unenroll" : "Enroll"}
+                        </button>
+                      )}
+
+                      {/* {inEnrolled(course) ? (
                         <button
                           onClick={(event) => {
                             event.preventDefault();
@@ -174,7 +140,7 @@ export default function Dashboard({
                         >
                           Enroll
                         </button>
-                      )}
+                      )} */}
                     </StudentProtectedRoute>
                   </div>
                 </Link>

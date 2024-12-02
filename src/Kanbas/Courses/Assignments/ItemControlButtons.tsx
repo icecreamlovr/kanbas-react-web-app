@@ -5,9 +5,11 @@ import DeleteConfirmation from "./DeleteConfirmation";
 
 export default function ItemControlButtons({
   assignmentId,
+  assignmentTitle,
   deleteAssignment,
 }: {
   assignmentId: string;
+  assignmentTitle: string;
   deleteAssignment: (assignmentId: string) => void;
 }) {
   const modalId = "wd-delete-assignment-confirmation-dialog-" + assignmentId;
@@ -21,7 +23,12 @@ export default function ItemControlButtons({
         data-bs-target={"#" + modalId}
       />
       <IoEllipsisVertical className="fs-4" />
-      <DeleteConfirmation modalId={modalId} assignmentId={assignmentId} deleteAssignment={deleteAssignment} />
+      <DeleteConfirmation
+        modalId={modalId}
+        assignmentId={assignmentId}
+        assignmentTitle={assignmentTitle}
+        deleteAssignment={deleteAssignment}
+      />
     </div>
   );
 }

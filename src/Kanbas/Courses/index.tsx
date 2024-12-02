@@ -7,12 +7,25 @@ import Assignments from "./Assignments";
 import AssignmentEditor from "./Assignments/Editor";
 import PeopleTable from "./People/Table";
 import FacultyProtectedRoute from "../Account/FacultyProtectedRoute";
+import * as courseClient from "./client";
+import { useState, useEffect } from "react";
 
 export default function Courses({ courses }: { courses: any[] }) {
   const { pathname } = useLocation();
   const { cid } = useParams();
   const course = courses.find((course) => course._id === cid);
   const [, , , , breadcrumb1, breadcrumb2] = pathname.split("/");
+  const [users, setUsers] = useState<any[]>([]);
+
+  const fetchUsers = async () => {
+    const users = await courseClient.findUsersForCourse(cid);
+    setUsers(users);
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, [cid]);
+
   return (
     <div id="wd-courses">
       <h2 className="text-danger">
@@ -38,7 +51,7 @@ export default function Courses({ courses }: { courses: any[] }) {
                 </FacultyProtectedRoute>
               }
             />
-            <Route path="People" element={<PeopleTable />} />
+            <Route path="People" element={<PeopleTable users={users} />} />
           </Routes>
         </div>
       </div>

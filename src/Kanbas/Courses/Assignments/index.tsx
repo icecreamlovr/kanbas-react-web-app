@@ -64,7 +64,7 @@ export default function Assignments() {
                         className="text-dark"
                         style={{ textDecoration: "none" }}
                       >
-                        {assignment._id} - {assignment.title}
+                        {assignment.title}
                       </Link>
                       <br />
                       <span className="pe-3 border-end border-grey text-danger">Multiple Modules</span>
@@ -85,6 +85,7 @@ export default function Assignments() {
                     <div className="col-1 float-end" style={{ width: 100 }}>
                       <ItemControlButtons
                         assignmentId={assignment._id}
+                        assignmentTitle={assignment.title}
                         deleteAssignment={(aid) => removeAssignment(aid)}
                       />
                     </div>

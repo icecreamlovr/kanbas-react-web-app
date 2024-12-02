@@ -7,7 +7,6 @@ import KanbasNavigation from "./Navigation";
 import Courses from "./Courses";
 import "./styles.css";
 import { useState, useEffect } from "react";
-import * as client from "./Courses/client";
 import * as userClient from "./Account/client";
 import * as courseClient from "./Courses/client";
 import { Provider } from "react-redux";
@@ -15,8 +14,9 @@ import store from "./store";
 import ProtectedRoute from "./Account/ProtectedRoute";
 
 export default function Kanbas() {
+  const [enrolling, setEnrolling] = useState<boolean>(false);
   const [courses, setCourses] = useState<any[]>([]);
-  const [allCourses, setAllCourses] = useState<any[]>([]);
+  // const [allCourses, setAllCourses] = useState<any[]>([]);
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const [course, setCourse] = useState<any>({
     _id: "0",
@@ -28,47 +28,71 @@ export default function Kanbas() {
     description: "New Description",
   });
   const addNewCourse = async () => {
-    const newCourse = await userClient.createCourse(course);
-    await fetchCourses();
-    // console.log(">>>1");
-    // console.log(courses);
+    const newCourse = await courseClient.createCourse(course);
+    // I have switched to `await fetchCourses();` here, because of bug in redux
+    // https://github.com/icecreamlovr/kanbas-react-web-app/commit/a23f423a405b508f666071be23fa7d26edfb1014
+    // I have fixed the bugs for modules and assignments in commit a23f423a405b508f666071be23fa7d26edfb1014, not courses.
+    // If courses is fixed, this can be switched back to redux.
+    await fetchCoursesConditional();
   };
   const deleteCourse = async (courseId: string) => {
     const status = await courseClient.deleteCourse(courseId);
-    await fetchCourses();
+    await fetchCoursesConditional();
   };
   const updateCourse = async () => {
     await courseClient.updateCourse(course);
-    await fetchCourses();
+    await fetchCoursesConditional();
   };
-  const handleEnroll = async (courseId: string) => {
-    const status = await userClient.enroll(courseId);
-    await fetchCourses();
-  };
-  const handleUnenroll = async (courseId: string) => {
-    const status = await userClient.unenroll(courseId);
-    await fetchCourses();
+
+  const updateEnrollment = async (courseId: string, enrolled: boolean) => {
+    if (enrolled) {
+      await userClient.enrollIntoCourse(currentUser._id, courseId);
+    } else {
+      await userClient.unenrollFromCourse(currentUser._id, courseId);
+    }
+    await fetchCoursesConditional();
   };
 
   const fetchCourses = async () => {
-    let enrolled = [];
-    let allCourses = [];
+    // console.log(">>>fetchCourses", enrolling);
     try {
-      enrolled = await userClient.findMyCourses();
+      const allCourses = await courseClient.fetchAllCourses();
+      const enrolledCourses = await userClient.findCoursesForUser(currentUser._id);
+      const courses = allCourses.map((course: any) => {
+        if (enrolledCourses.find((c: any) => c._id === course._id)) {
+          return { ...course, enrolled: true };
+        } else {
+          return course;
+        }
+      });
+      setCourses(courses);
     } catch (error) {
       console.error(error);
     }
-    try {
-      allCourses = await courseClient.fetchAllCourses();
-    } catch (error) {
-      console.error(error);
-    }
-    setCourses(enrolled);
-    setAllCourses(allCourses);
   };
+
+  const findCoursesForUser = async () => {
+    // console.log(">>>findCoursesForUser", enrolling);
+    try {
+      const courses = await userClient.findCoursesForUser(currentUser._id);
+      setCourses(courses);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchCoursesConditional = async () => {
+    // console.log(">>>enrolling", enrolling);
+    if (enrolling) {
+      await fetchCourses();
+    } else {
+      await findCoursesForUser();
+    }
+  };
+
   useEffect(() => {
-    fetchCourses();
-  }, [currentUser]);
+    fetchCoursesConditional();
+  }, [currentUser, enrolling]);
 
   return (
     <Session>
@@ -83,15 +107,15 @@ export default function Kanbas() {
               element={
                 <ProtectedRoute>
                   <Dashboard
-                    allCourses={allCourses}
-                    enrolledCourses={courses}
+                    courses={courses}
                     course={course}
                     setCourse={setCourse}
                     addNewCourse={addNewCourse}
                     deleteCourse={deleteCourse}
                     updateCourse={updateCourse}
-                    handleEnroll={handleEnroll}
-                    handleUnenroll={handleUnenroll}
+                    updateEnrollment={updateEnrollment}
+                    enrolling={enrolling}
+                    setEnrolling={setEnrolling}
                   />
                 </ProtectedRoute>
               }
